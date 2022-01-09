@@ -34,7 +34,7 @@ def main():
 # wiki page
 # https://www.freecodecamp.org/news/scraping-wikipedia-articles-with-python/
 def get_all_wiki_links(current_page):
-	start_url = "https://en.wikipedia.org/wiki/" + starting_page
+	start_url = starting_page
 	print(start_url)
 	res = requests.get(start_url)
 	print(res.status_code)
@@ -42,11 +42,13 @@ def get_all_wiki_links(current_page):
 	# 	print("connection to page unsuccessful")
 	# 	exit(1)
 	soup = bs(res.content, 'html.parser')
-	every_link = soup.find(id="bodyContent").find_all("a")
-	all_links = {}
+	every_link = soup.find(id="bodyContent").find_all('a')
+	all_links = []
+	i = 0
 	for link in every_link:
-		if link['href'].find("/wiki/") != -1:
-			all_links[link.text.strip] = link
+		if link.get('href','').find("/wiki/") != -1 and link.get('title','') != "":
+			all_links.append(link.get('title','').replace(' ', '_'))
+	print(all_links.index("Staple_food"))
 
 	return all_links
 
